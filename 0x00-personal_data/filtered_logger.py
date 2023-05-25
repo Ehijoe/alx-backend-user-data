@@ -5,7 +5,7 @@ import re
 import logging
 from logging import StreamHandler
 import os
-import mysql.connector
+from mysql.connector import connect
 
 PII_FIELDS = ("name", "phone", "ssn", "password", "ip")
 
@@ -50,7 +50,7 @@ def filter_datum(fields: List[str], redaction: str,
 
 def get_db():
     """Connect to the database."""
-    return mysql.connector.connect(
+    return connect(
         user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
         password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
         host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
