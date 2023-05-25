@@ -6,6 +6,7 @@ import logging
 from logging import StreamHandler
 import os
 from mysql.connector import connect, MySQLConnection
+import bcrypt
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -27,6 +28,11 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION,
                                   record.msg, self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
+
+
+def hash_password(password: str) -> bytes:
+    """Hash a user's password."""
+    return bcrypt.hashpw(password, bcrypt.gensalt())
 
 
 def get_logger() -> logging.Logger:
