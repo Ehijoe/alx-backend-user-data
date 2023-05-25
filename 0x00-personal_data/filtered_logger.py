@@ -4,6 +4,8 @@ from typing import List
 import re
 import logging
 from logging import StreamHandler
+import os
+import mysql.connector
 
 PII_FIELDS = ("name", "phone", "ssn", "password", "ip")
 
@@ -44,3 +46,13 @@ def filter_datum(fields: List[str], redaction: str,
         message = re.sub(f"{field}=[^{separator}]*{separator}",
                          f"{field}={redaction}{separator}", message)
     return message
+
+
+def get_db():
+    """Connect to the database."""
+    return mysql.connector.connect(
+        user=os.getenv("PERSONAL_DATA_DB_USERNAME"),
+        password=os.getenv("PERSONAL_DATA_DB_PASSWORD"),
+        host=os.getenv("PERSONAL_DATA_DB_HOST"),
+        database=os.getenv("PERSONAL_DATA_DB_NAME"),
+    )
