@@ -5,9 +5,9 @@ import re
 import logging
 from logging import StreamHandler
 import os
-from mysql.connector import connect
+from mysql.connector import connect, MySQLConnection
 
-PII_FIELDS = ("name", "phone", "ssn", "password", "ip")
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -48,11 +48,25 @@ def filter_datum(fields: List[str], redaction: str,
     return message
 
 
-def get_db():
+def get_db() -> MySQLConnection:
     """Connect to the database."""
-    return connect(
-        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
-        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
-        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
-        database=os.getenv("PERSONAL_DATA_DB_NAME", "holberton"),
-    )
+    return connect(user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
+                   password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
+                   host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
+                   database=os.getenv("PERSONAL_DATA_DB_NAME", "holberton"))
+
+
+def main():
+    """Display all rows in the database."""
+    logger = get_logger()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users")
+    for row in cursor:
+        logger.info(
+            " ".join([f"{key}={value};" for key, value in row.items()])
+        )
+
+
+if __name__ == '__main__':
+    main()
