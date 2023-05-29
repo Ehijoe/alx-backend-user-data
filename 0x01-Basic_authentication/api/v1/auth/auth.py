@@ -8,10 +8,18 @@ class Auth:
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Check if a path requires authentication."""
+        def like(path: str, pattern: str) -> bool:
+            """Check if a path matches a pattern."""
+            if pattern[-1] == "*":
+                return path.startswith(pattern[:-1])
+            return path == pattern
+
         if path is None or excluded_paths is None or len(path) == 0:
             return True
         new_path = path if path[-1] == "/" else path + "/"
-        return new_path not in excluded_paths
+        return not any(
+            [like(new_path, pattern) for pattern in excluded_paths]
+        )
 
     def authorization_header(self, request=None) -> str:
         """To be implemented."""
