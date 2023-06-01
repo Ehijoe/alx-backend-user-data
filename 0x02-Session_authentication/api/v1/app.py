@@ -30,7 +30,7 @@ elif auth_type == "session_auth":
 def check_auth():
     """Check if user is authenticated."""
     excluded_paths = ['/api/v1/status/', '/api/v1/unauthorized/',
-                      '/api/v1/forbidden/']
+                      '/api/v1/forbidden/', '/api/v1/auth_session/login/']
     if auth is None:
         return
     request.current_user = auth.current_user(request)
