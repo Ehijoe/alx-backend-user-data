@@ -34,6 +34,8 @@ def check_auth():
     if auth is None:
         return
     request.current_user = auth.current_user(request)
+    if auth.authorization_header(request) and auth.session_cookie(request):
+        abort(401)
     if auth.require_auth(request.path, excluded_paths):
         if auth.authorization_header(request) is None:
             abort(401)
