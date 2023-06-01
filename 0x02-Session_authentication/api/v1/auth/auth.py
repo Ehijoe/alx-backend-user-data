@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Authentication system."""
 from typing import List, TypeVar
+import os
 
 
 class Auth:
@@ -30,3 +31,10 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """Return the current user."""
         return None
+
+    def session_cookie(self, request=None):
+        """Return the session id."""
+        if request is None:
+            return None
+        cookie_name = os.getenv("SESSION_NAME")
+        return request.cookies.get(cookie_name)
