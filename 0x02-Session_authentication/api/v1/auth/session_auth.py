@@ -28,7 +28,7 @@ class SessionAuth(Auth):
         """Return the current user based on the session cookie."""
         if request is None:
             return None
-        user_id = self.user_id_by_session_id(self.session_cookie(request))
+        user_id = self.user_id_for_session_id(self.session_cookie(request))
         if user_id is None:
             return None
         return User.get(user_id)
