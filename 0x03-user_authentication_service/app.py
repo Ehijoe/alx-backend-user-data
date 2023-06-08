@@ -18,7 +18,6 @@ def users():
     """Register a new user."""
     email = request.form.get("email")
     password = request.form.get("password")
-    print(email, password)
     try:
         AUTH.register_user(email, password)
     except ValueError:
