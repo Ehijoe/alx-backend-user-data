@@ -47,7 +47,7 @@ class DB:
         """Update a user's information."""
         user = self.find_user_by(id=user_id)
         for field, val in kwargs.items():
-            if not hasattr(user, field):
+            if field not in [col.name for col in User.__table__.columns]:
                 raise ValueError
             setattr(user, field, val)
         self._session.commit()
