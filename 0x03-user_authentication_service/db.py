@@ -42,3 +42,12 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user."""
         return self._session.query(User).filter_by(**kwargs).one()
+
+    def update_user(self, user_id: int, **kwargs):
+        """Update a user's information."""
+        user = self.find_user_by(id=user_id)
+        for field, val in kwargs.items():
+            if not hasattr(user, field):
+                raise ValueError
+            setattr(user, field, val)
+        self._session.commit()
